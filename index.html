@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HyperMeow</title>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12/dist/socket.js"></script>
+  </head>
+  <body></body>
+  <script type="text/hyperscript">
+    socket Server wss://server.meower.org
+      on message as json
+        log message
+    end
+  </script>
+</html>
