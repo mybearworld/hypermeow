@@ -9,6 +9,37 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <form
+      id="login"
+      _="
+        on submit
+          halt the event
+          send Message(cmd: 'direct', listener: 'authpswd', val: {
+            cmd: 'authpswd',
+            val: {
+              username: first value of <[name=username] />,
+              pswd: first value of <[name=password] />
+            }
+          }) to Server
+
+          on loginSuccess
+            hide me
+            put the $username into <.welcome-username/>
+            show #welcome
+          on loginFail(message)
+            put the message into .error then show .error
+      "
+    >
+      <div>
+        <input placeholder="Username" name="username" />
+        <input placeholder="Password" type="password" name="password" />
+        <button>Log in</button>
+      </div>
+      <div class="error" _="init hide me"></div>
+    </form>
+    <div id="welcome" _="init hide me">
+      Welcome, <span class="welcome-username"></span>!
+    </div>
     <div
       id="posts"
       _="
@@ -33,12 +64,26 @@
     ></div>
   </body>
   <script type="text/hyperscript">
+    init
+      set $username to null
+      set $token to null
+
     socket Server wss://server.meower.org
       on message as json
         log message
         if the message's val's mode is 1 and
            the message's val's post_origin is "home" then
           send post(post: the message's val) to #posts
+        else if the message's listener is "authpswd" then
+          if the message's cmd is "statuscode" then
+            if the message's val is not "I:100 | OK" then
+              send loginFail(message: message's val) to #login
+            end
+          else
+            set $username to the message's val's payload's username
+            set $token to the message's val's payload's token
+            send loginSuccess to #login
+          end
         end
     end
   </script>

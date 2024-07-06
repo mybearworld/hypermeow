@@ -1,6 +1,11 @@
+:root {
+  --background-color: #171717;
+  --text-color: #e4e4e7;
+}
+
 html {
-  background-color: #171717;
-  color: #e4e4e7;
+  background-color: var(--background-color);
+  color: var(--text-color);
   font-family: monospace;
   font-size: 16px;
   max-width: 50rem;
@@ -28,4 +33,38 @@ html {
 .postContent {
   display: table-cell;
   white-space: pre-wrap;
+}
+
+textarea,
+input {
+  background: none;
+  color: inherit;
+  font: inherit;
+  border: none;
+  resize: none;
+  outline: none;
+  padding: 0;
+}
+
+button {
+  background-color: var(--text-color);
+  color: var(--background-color);
+  font: inherit;
+  border: none;
+}
+button:hover {
+  font-weight: 900;
+}
+
+form > div {
+  display: flex;
+  gap: 1ch;
+}
+form > div > input,
+form > div > textarea {
+  flex-grow: 1;
+}
+
+.error {
+  color: #ef4444;
 }
