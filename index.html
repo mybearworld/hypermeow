@@ -24,8 +24,7 @@
 
           on loginSuccess
             hide me
-            put the $username into <.welcome-username/>
-            show #welcome
+            show #posting
           on loginFail(message)
             put the message into .error then show .error
       "
@@ -37,9 +36,49 @@
       </div>
       <div class="error" _="init hide me"></div>
     </form>
-    <div id="welcome" _="init hide me">
-      Welcome, <span class="welcome-username"></span>!
-    </div>
+    <form
+      id="posting"
+      _="
+        init hide me
+        on submit
+          halt the event
+          hide .error
+          fetch https://api.meower.org/home {
+            'method': 'POST',
+            'headers': { 'Token': $token, 'Content-Type': 'application/json' },
+            'body': (
+              { 'content': first value of <[name=post-content] /> }
+            ) as JSON
+          }
+          as json
+          if its error
+            put its type into .error
+            show .error
+          else
+            set the value of <[name=post-content] /> to ''
+          end
+      "
+    >
+      <div>
+        <textarea
+          rows="1"
+          placeholder="Write something..."
+          name="post-content"
+          _="
+            on keydown(key, shiftKey)
+              if key == 'Enter' and not shiftKey then
+                halt the event
+                send submit to #posting
+              end
+            on input
+              set my style's height to 'auto'
+              set my style's height to (my scrollHeight)px
+          "
+        ></textarea>
+        <button>Post</button>
+      </div>
+      <div class="error" _="init hide me"></div>
+    </form>
     <div
       id="posts"
       _="
