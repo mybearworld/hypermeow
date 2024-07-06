@@ -12,6 +12,7 @@
       id="posts"
       _="
         def addPost(post)
+          log post
           make a <div.post /> then set postElement to it
           make a <div.username />
             put the post's u into it
@@ -21,6 +22,10 @@
             put it at the end of the postElement
           put the postElement at the start of me
         end
+
+        init fetch https://api.meower.org/home
+          reverse() the autoget of the result as an Object then set posts to it
+          forEach(\post -> addPost(post)) on posts
 
         on post(post) addPost(post)
       "
