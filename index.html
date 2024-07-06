@@ -7,11 +7,33 @@
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12/dist/socket.js"></script>
   </head>
-  <body></body>
+  <body>
+    <div
+      id="posts"
+      _="
+        def addPost(post)
+          make a <div.post /> then set postElement to it
+          make a <div.username />
+            put the post's u into it
+            put it at the end of the postElement
+          make a <div.post />
+            put the post's p into it
+            put it at the end of the postElement
+          put the postElement at the start of me
+        end
+
+        on post(post) addPost(post)
+      "
+    ></div>
+  </body>
   <script type="text/hyperscript">
     socket Server wss://server.meower.org
       on message as json
         log message
+        if the message's val's mode is 1 and
+           the message's val's post_origin is "home" then
+          send post(post: the message's val) to #posts
+        end
     end
   </script>
 </html>
